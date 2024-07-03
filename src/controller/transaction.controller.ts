@@ -8,6 +8,7 @@ const transactionController = {
   fetchAllTodo: async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!process.env.WALLET_ID) return;
+
       let result = await ardb
         .search("transactions")
         .tag("App-Name", appConfig.name)
