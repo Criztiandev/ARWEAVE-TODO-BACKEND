@@ -16,8 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/rant", rantRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+// app.use(notFound);
+// app.use(errorHandler);
 app.listen(PORT, () => console.log(`Server is running on: ${PORT}`));
 
 export default app;
