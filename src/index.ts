@@ -1,5 +1,5 @@
 import express from "express";
-import transactionRoutes from "./routes/transaction.routes";
+import rantRoutes from "./routes/rant.routes";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -11,16 +11,14 @@ const PORT = process.env.PORT || 8000;
 app.use(
   cors({
     origin: "*", // Allow all origins
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
-    credentials: true, // Allow cookies to be sent
+    credentials: true,
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/transaction", transactionRoutes);
+app.use("/api/rant", rantRoutes);
 
 app.listen(PORT, () => console.log(`Server is running on: ${PORT}`));
 

@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { json, NextFunction, Request, Response } from "express";
 import arweave, { ardb } from "../config/arweave.config";
 import walletConfig from "../config/wallet.config";
 import appConfig from "../config/app.config";
 import wallet from "../config/wallet.config";
 
-const transactionController = {
-  fetchAllTodo: async (req: Request, res: Response, next: NextFunction) => {
+const rantController = {
+  fetchAllRant: async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!process.env.WALLET_ID) return;
 
@@ -15,7 +15,7 @@ const transactionController = {
         .from(process.env.WALLET_ID)
         .findAll();
 
-      const todos = await Promise.all(
+      const rants = await Promise.all(
         result.map(async (items) => {
           const status = await arweave.transactions.getStatus(items.id);
 
@@ -23,7 +23,7 @@ const transactionController = {
             console.log(`Transaction ${items.id} is not confirmed. Skipping.`);
             return {
               id: items.id,
-              todo: null,
+              rant: null,
             };
           }
 
@@ -34,25 +34,25 @@ const transactionController = {
 
           return {
             id: items.id,
-            todo: transactions,
+            rant: transactions,
           };
         })
       );
 
       res.status(200).json({
-        payload: todos.filter((items) => items?.todo !== null),
+        payload: rants.filter((items) => items?.rant !== null),
       });
     } catch (e) {
       console.log(e);
     }
   },
 
-  createTodo: async (req: Request, res: Response, next: NextFunction) => {
+  createRant: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { body } = req;
 
       const payload = await arweave.createTransaction(
-        { data: body?.todo || "Todo" },
+        { data: body?.rant || "Rant" },
         wallet
       );
 
@@ -60,7 +60,7 @@ const transactionController = {
       payload.addTag("Content-Type", "text/plain");
       payload.addTag("App-Name", appConfig.name);
       payload.addTag("App-Version", "v1");
-      payload.addTag("Type", "Todo");
+      payload.addTag("Type", "Rant");
 
       //Signing token
       await arweave.transactions.sign(payload, wallet);
@@ -77,9 +77,11 @@ const transactionController = {
     }
   },
 
-  //   fetchTodoById: async (req: Request, res: Response, next: NextFunction) => {
-  //     // Implementation for fetching a todo by ID
-  //   },
+  greet: async (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({
+      message: "hi",
+    });
+  },
 };
 
-export default transactionController;
+export default rantController;
