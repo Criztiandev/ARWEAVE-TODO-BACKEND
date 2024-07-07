@@ -1,4 +1,4 @@
 export default {
   name: "Sample",
-  version: "v1",
+  version: "v2",
 };
